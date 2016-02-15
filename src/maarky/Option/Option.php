@@ -74,12 +74,7 @@ abstract class Option
      * @param callable $each
      * @return void
      */
-    public function foreach (callable $each)
-    {
-        if($this->isSome()) {
-            $each($this->value);
-        }
-    }
+    abstract public function foreach(callable $each);
 
     /**
      * @param callable $map
