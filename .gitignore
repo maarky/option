@@ -1,0 +1,6 @@
+/.idea
+/.vagrant
+/Option.iml
+/composer.lock
+/vendor
+/sandbox

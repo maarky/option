@@ -1,0 +1,25 @@
+{
+  "name": "maarky/option",
+  "description": "Option class for PHP with type safety",
+  "keywords": ["php","option","language","type"],
+  "type": "library",
+  "license": "Apache2",
+  "authors": [
+    {
+      "name": "Mark Wright",
+      "email": "sparkymeister@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.2.*"
+  },
+  "autoload": {
+    "psr-4": { "maarky\\": "src/maarky/" }
+  },
+  "autoload-dev": {
+    "psr-4": { "maarky\\Test\\": "test/maarky/" }
+  }
+}
