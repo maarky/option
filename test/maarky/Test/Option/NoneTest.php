@@ -50,6 +50,13 @@ class NoneTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($else, $none->getOrElse($else));
     }
 
+    public function testGetOrCall()
+    {
+        $none = new None;
+        $else = 1;
+        $this->assertEquals($else, $none->getOrCall(function() use($else) { return $else; }));
+    }
+
     public function testIsDefined()
     {
         $none = new None;
@@ -75,11 +82,11 @@ class NoneTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($some, $none->orElse($some));
     }
 
-    public function testOrElseCall()
+    public function testOrCall()
     {
         $none = new None;
         $some = new Some(1);
-        $this->assertSame($some, $none->orElseCall(function() use($some) { return $some; }));
+        $this->assertSame($some, $none->orCall(function() use($some) { return $some; }));
     }
 
     public function testEquals()

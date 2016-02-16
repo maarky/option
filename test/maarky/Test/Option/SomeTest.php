@@ -22,6 +22,13 @@ class SomeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($value, $some->getorElse(2));
     }
 
+    public function testGetOrCall()
+    {
+        $value = 1;
+        $some = new Some($value);
+        $this->assertEquals($value, $some->getorCall(function() { return 5; }));
+    }
+
     public function testGetOrElse_notElse()
     {
         $value = 1;
@@ -74,6 +81,14 @@ class SomeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $some->map($double));
     }
 
+    public function testMap_callbackString()
+    {
+        $value = 'hello';
+        $some = new Some($value);
+        $expected = new Some(strtolower($value));
+        $this->assertEquals($expected, $some->map('strtolower'));
+    }
+
     public function testMap_mayReturnOptionWithSome()
     {
         $value = 2;
@@ -111,13 +126,13 @@ class SomeTest extends \PHPUnit_Framework_TestCase
     public function testFilter_callbackArray_true()
     {
         $some = new Some(1);
-        $this->assertEquals($some, $some->filter(array($this, 'callbackT')));
+        $this->assertEquals($some, $some->filter(array($this, 'callbackTrue')));
     }
 
     public function testFilter_callbackArray_false()
     {
         $some = new Some(1);
-        $this->assertInstanceOf('maarky\Option\None', $some->filter(array($this, 'callbackF')));
+        $this->assertInstanceOf('maarky\Option\None', $some->filter(array($this, 'callbackFalse')));
     }
 
     public function testForEach()
@@ -140,10 +155,10 @@ class SomeTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($some, $some->orElse($else));
     }
 
-    public function testOrElseCall()
+    public function testOrCall()
     {
         $some = new Some(1);
-        $this->assertSame($some, $some->orElseCall(function(){}));
+        $this->assertSame($some, $some->orCall(function(){}));
     }
 
     public function testIsDefined()
@@ -178,12 +193,12 @@ class SomeTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($some->equals($other));
     }
 
-    public function callbackT()
+    public function callbackTrue()
     {
         return true;
     }
 
-    public function callbackF()
+    public function callbackFalse()
     {
         return false;
     }

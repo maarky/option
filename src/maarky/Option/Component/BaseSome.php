@@ -26,6 +26,11 @@ trait BaseSome
         return $this->get();
     }
 
+    public function getOrCall(callable $call)
+    {
+        return $this->get();
+    }
+
     /**
      * @param Option $else
      * @return Option
@@ -36,7 +41,7 @@ trait BaseSome
         return $this;
     }
 
-    public function orElseCall(callable $else): Option
+    public function orCall(callable $else): Option
     {
         return $this;
     }

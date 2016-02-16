@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace maarky\Option\Component;
 
 use maarky\Option\Option;
+use maarky\Option\Some;
 
 trait BaseNone
 {
@@ -17,11 +18,20 @@ trait BaseNone
         return $else;
     }
 
-    public function orElseCall(callable $else): Option
+    public function getOrCall(callable $call)
+    {
+        return $call();
+    }
+
+    public function orCall(callable $else): Option
     {
         $option = $else();
         if(!$option instanceof Option) {
-            throw new \InvalidArgumentException('The callback must return an Option.');
+            if($this->validate($option)) {
+                $someClass = $this->getSome($option);
+                return new $someClass($option);
+            }
+            return new Some($option);
         }
         return $option;
     }

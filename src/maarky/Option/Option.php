@@ -10,6 +10,10 @@ abstract class Option
      * @var None
      */
     protected $none;
+    /**
+     * @var string
+     */
+    protected $some;
 
     protected function validate($value): bool
     {
@@ -19,12 +23,16 @@ abstract class Option
     abstract public function get();
 
     /**
-     * $else must return an Option
-     *
-     * @param callable $else
-     * @return Option
+     * @param mixed $else
+     * @return mixed
      */
     abstract public function getOrElse($else);
+
+    /**
+     * @param callable $call
+     * @return mixed
+     */
+    abstract public function getOrCall(callable $call);
 
     /**
      * @param Option $else
@@ -36,7 +44,7 @@ abstract class Option
      * @param callable $else
      * @return Option
      */
-    abstract public function orElseCall(callable $else): Option;
+    abstract public function orCall(callable $else): Option;
 
     /**
      * @return bool
@@ -94,13 +102,34 @@ abstract class Option
             return $this;
         }
         if(null == $this->none) {
-            $className = get_class($this);
-            $classNameParts = explode('\\', $className);
-            array_pop($classNameParts);
-            $classNameParts[] = 'None';
-            $noneClass = implode('\\', $classNameParts);
+            $noneClass = $this->getOption('none');
             $this->none = new $noneClass;
         }
         return $this->none;
+    }
+
+    protected function getSome($value)
+    {
+        if($this->validate($value)) {
+            if(null == $this->some) {
+                $this->some = $this->getOption('some');
+            }
+            $someClass = $this->some;
+            return new $someClass($value);
+        }
+        return new Some($value);
+    }
+
+    protected function getOption(string $type)
+    {
+        $type = strtolower($type);
+        if(!in_array($type, ['some', 'none'])) {
+            throw new \InvalidArgumentException;
+        }
+        $className = get_class($this);
+        $classNameParts = explode('\\', $className);
+        array_pop($classNameParts);
+        $classNameParts[] = ucwords($type);
+        return implode('\\', $classNameParts);
     }
 }
