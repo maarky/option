@@ -87,4 +87,17 @@ class NoneTest extends \PHPUnit_Framework_TestCase
         $some = new Some('a');
         $this->assertFalse($none->equals($some));
     }
+
+    public function testOrCall()
+    {
+        $none = new None();
+        $value = 'hello';
+        $this->assertEquals(new Some($value), $none->orCall(function() use($value) { return $value; }));
+    }
+
+    public function testOrCall_correctType()
+    {
+        $none = new None();
+        $this->assertInstanceOf('maarky\Option\Type\String\Some', $none->orCall(function() { return 'hello'; }));
+    }
 }
