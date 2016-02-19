@@ -28,8 +28,7 @@ trait BaseNone
         $option = $else();
         if(!$option instanceof Option) {
             if($this->validate($option)) {
-                $someClass = $this->getSome($option);
-                return new $someClass($option);
+                return $this->getSome($option);
             }
             return new Some($option);
         }
