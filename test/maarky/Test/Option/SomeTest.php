@@ -5,6 +5,8 @@ namespace maarky\Test\Option;
 
 use maarky\Option\None;
 use maarky\Option\Some;
+use maarky\Option\Type\Bool\Some as BoolSome;
+use maarky\Option\Type\Bool\None as BoolNone;
 
 class SomeTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,6 +46,22 @@ class SomeTest extends \PHPUnit_Framework_TestCase
         $expected = new Some($double($value));
         $some = new Some($value);
         $this->assertEquals($expected, $some->flatMap($double));
+    }
+
+    public function testFlatMap_mustReturnProperSome()
+    {
+        $expected = new BoolSome(true);
+        $function = function() use($expected) { return $expected; };
+        $some = new Some(5);
+        $this->assertEquals($expected, $some->flatMap($function));
+    }
+
+    public function testFlatMap_mustReturnProperNone()
+    {
+        $expected = new BoolNone(true);
+        $function = function() use($expected) { return $expected; };
+        $some = new Some(5);
+        $this->assertEquals($expected, $some->flatMap($function));
     }
 
     public function testFlatMap_mustNotReturnOptionWithOption()

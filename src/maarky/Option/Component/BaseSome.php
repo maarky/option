@@ -110,6 +110,9 @@ trait BaseSome
         } elseif($mapped instanceof Option && $mapped->isNone()) {
             return $mapped;
         }
+        if($option instanceof Option) {
+            return $option;
+        }
         if($this->validate($mapped)) {
             return new self($mapped);
         }
