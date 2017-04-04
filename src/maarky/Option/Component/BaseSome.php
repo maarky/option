@@ -97,26 +97,10 @@ trait BaseSome
     public function flatMap(callable $map): Option
     {
         $mapped = $map($this->value);
-        if($mapped instanceof Option && $mapped->isNone()) {
-            return $mapped;
+        if(!$mapped instanceof Option) {
+            throw new \UnexpectedValueException('The callback must return an Option.');
         }
-        $option = null;
-        while($mapped instanceof Option && $mapped->isSome()) {
-            $option = $mapped;
-            $mapped = $mapped->get();
-        }
-        if($option instanceof Option && $option->isNone()) {
-            return $option;
-        } elseif($mapped instanceof Option && $mapped->isNone()) {
-            return $mapped;
-        }
-        if($option instanceof Option) {
-            return $option;
-        }
-        if($this->validate($mapped)) {
-            return new self($mapped);
-        }
-        return new Some($mapped);
+        return $mapped;
     }
 
     /**

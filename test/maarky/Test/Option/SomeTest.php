@@ -42,8 +42,8 @@ class SomeTest extends \PHPUnit_Framework_TestCase
     public function testFlatMap()
     {
         $value = 2;
-        $double = function(int $num) { return $num * 2; };
-        $expected = new Some($double($value));
+        $double = function(int $num) { return new Some($num * 2); };
+        $expected = $double($value);
         $some = new Some($value);
         $this->assertEquals($expected, $some->flatMap($double));
     }
@@ -58,7 +58,7 @@ class SomeTest extends \PHPUnit_Framework_TestCase
 
     public function testFlatMap_mustReturnProperNone()
     {
-        $expected = new BoolNone(true);
+        $expected = new BoolNone();
         $function = function() use($expected) { return $expected; };
         $some = new Some(5);
         $this->assertEquals($expected, $some->flatMap($function));
@@ -84,10 +84,17 @@ class SomeTest extends \PHPUnit_Framework_TestCase
 
     public function testFlatMap_withSomeNone()
     {
-        $none = new None;
-        $option = function() use($none) { return new Some($none); };
+        $expected = new Some(new None);
+        $map = function() use($expected) { return $expected; };
         $some = new Some(2);
-        $this->assertEquals($none, $some->flatMap($option));
+        $this->assertEquals($expected, $some->flatMap($map));
+    }
+
+    public function testFlatMap_callbackMustReturnOption()
+    {
+        $this->expectException('UnexpectedValueException');
+        $some = new Some(2);
+        $some->flatMap(function() { return 1; });
     }
 
     public function testMap()
