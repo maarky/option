@@ -5,3 +5,4 @@
 /vendor
 /sandbox
 .DS_Store
+*.log
