@@ -8,7 +8,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "ubuntu/xenial64"
 
-  config.vm.network "forwarded_port", guest: 22, host: 2202
   config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=777"]
 
   config.vm.provision "shell", path: "vagrant.sh"
