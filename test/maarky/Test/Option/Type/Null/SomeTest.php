@@ -52,13 +52,6 @@ class SomeTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($some->equals($some));
     }
 
-    public function testEquals_false_wrongSome()
-    {
-        $some = new Some(null);
-        $baseSome = new BaseSome(null);
-        $this->assertFalse($some->equals($baseSome));
-    }
-
     public function testEquals_false_withNone()
     {
         $some = new Some(null);
