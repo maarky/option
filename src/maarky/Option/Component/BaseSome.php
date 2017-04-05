@@ -87,7 +87,8 @@ trait BaseSome
         if(true === $filter($this->value)) {
             return $this;
         }
-        return $this->getNone();
+        $noneClass = get_called_class()::getCalledNamespace() . '\\None';
+        return new $noneClass;
     }
 
     /**
@@ -119,7 +120,7 @@ trait BaseSome
     public function map(callable $map): Option
     {
         $mapped = $map($this->value);
-        if($this->validate($mapped)) {
+        if(self::validate($mapped)) {
             return new self($mapped);
         }
         return new Some($mapped);
