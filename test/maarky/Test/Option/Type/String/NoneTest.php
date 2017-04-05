@@ -92,12 +92,12 @@ class NoneTest extends \PHPUnit_Framework_TestCase
     {
         $none = new None();
         $value = 'hello';
-        $this->assertEquals(new Some($value), $none->orCall(function() use($value) { return $value; }));
+        $this->assertEquals(new Some($value), $none->orCall(function() use($value) { return new Some($value); }));
     }
 
     public function testOrCall_correctType()
     {
         $none = new None();
-        $this->assertInstanceOf('maarky\Option\Type\String\Some', $none->orCall(function() { return 'hello'; }));
+        $this->assertInstanceOf('maarky\Option\Type\String\Some', $none->orCall(function() { return new Some('hello'); }));
     }
 }
