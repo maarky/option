@@ -8,9 +8,11 @@ use maarky\Option\Some;
 
 trait BaseSome
 {
+    protected $value;
+
     public function __construct($value)
     {
-        if(!$this->validate($value)) {
+        if(!self::validate($value)) {
             throw new \TypeError;
         }
         $this->value = $value;
@@ -60,22 +62,6 @@ trait BaseSome
     public function isSome(): bool
     {
         return true;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDefined(): bool
-    {
-        return $this->isSome();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEmpty(): bool
-    {
-        return $this->isNone();
     }
 
     /**

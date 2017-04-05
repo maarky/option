@@ -59,22 +59,6 @@ trait BaseNone
     }
 
     /**
-     * @return bool
-     */
-    public function isDefined(): bool
-    {
-        return $this->isSome();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEmpty(): bool
-    {
-        return $this->isNone();
-    }
-
-    /**
      * @param callable $filter returns boolean
      * @return Option
      */
