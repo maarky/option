@@ -5,19 +5,27 @@ namespace maarky\Option;
 
 abstract class Option
 {
-    protected $value;
-    /**
-     * @var None
-     */
-    protected $none;
-    /**
-     * @var string
-     */
-    protected $some;
-
-    protected function validate($value): bool
+    public static function validate($value): bool
     {
-        return true;
+        return !is_null($value);
+    }
+
+    public static function new($value)
+    {
+        $namespace = get_called_class()::getCalledNamespace();
+        if(get_called_class()::validate($value)) {
+            $someClass = $namespace . '\\Some';
+            return new $someClass($value);
+        }
+        $noneClass = $namespace . '\\None';
+        return new $noneClass;
+    }
+
+    protected static function getCalledNamespace()
+    {
+        $classParts = explode('\\', get_called_class());
+        array_pop($classParts);
+        return implode('\\', $classParts);
     }
 
     abstract public function get();
@@ -59,12 +67,18 @@ abstract class Option
     /**
      * @return bool
      */
-    abstract public function isDefined(): bool;
+    public function isDefined(): bool
+    {
+        return $this->isSome();
+    }
 
     /**
      * @return bool
      */
-    abstract public function isEmpty(): bool;
+    public function isEmpty(): bool
+    {
+        return $this->isNone();
+    }
 
     /**
      * @param callable $filter returns boolean
@@ -95,41 +109,4 @@ abstract class Option
      * @return bool
      */
     abstract public function equals(Option $option): bool;
-
-    protected function getNone()
-    {
-        if($this->isNone()) {
-            return $this;
-        }
-        if(null == $this->none) {
-            $noneClass = $this->getOption('none');
-            $this->none = new $noneClass;
-        }
-        return $this->none;
-    }
-
-    protected function getSome($value)
-    {
-        if($this->validate($value)) {
-            if(null == $this->some) {
-                $this->some = $this->getOption('some');
-            }
-            $someClass = $this->some;
-            return new $someClass($value);
-        }
-        return new Some($value);
-    }
-
-    protected function getOption(string $type)
-    {
-        $type = strtolower($type);
-        if(!in_array($type, ['some', 'none'])) {
-            throw new \InvalidArgumentException;
-        }
-        $className = get_class($this);
-        $classNameParts = explode('\\', $className);
-        array_pop($classNameParts);
-        $classNameParts[] = ucwords($type);
-        return implode('\\', $classNameParts);
-    }
 }
