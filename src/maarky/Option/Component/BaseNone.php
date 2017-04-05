@@ -27,10 +27,7 @@ trait BaseNone
     {
         $option = $else();
         if(!$option instanceof Option) {
-            if($this->validate($option)) {
-                return $this->getSome($option);
-            }
-            return new Some($option);
+            throw new \UnexpectedValueException('callable must return an option.');
         }
         return $option;
     }
@@ -100,7 +97,9 @@ trait BaseNone
      * @return void
      */
     public function foreach (callable $each)
-    {}
+    {
+        //do nothing on None
+    }
 
     /**
      * @param callable $map
