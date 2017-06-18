@@ -73,7 +73,7 @@ trait BaseSome
         if(true === $filter($this->value)) {
             return $this;
         }
-        $noneClass = get_called_class()::getCalledNamespace() . '\\None';
+        $noneClass = self::getCalledNamespace() . '\\None';
         return new $noneClass;
     }
 
@@ -97,6 +97,7 @@ trait BaseSome
     public function foreach (callable $each)
     {
         $each($this->value);
+        return $this;
     }
 
     /**
@@ -106,8 +107,9 @@ trait BaseSome
     public function map(callable $map): Option
     {
         $mapped = $map($this->value);
-        if(self::validate($mapped)) {
-            return new self($mapped);
+        $self = self::getCalledNamespace() . '\\Some';
+        if($self::validate($mapped)) {
+            return new $self($mapped);
         }
         return new Some($mapped);
     }
@@ -118,6 +120,7 @@ trait BaseSome
      */
     public function equals(Option $option): bool
     {
-        return $option instanceof self && $this->value === $option->get();
+        $self = self::getCalledNamespace() . '\\Some';
+        return $option instanceof $self && $this->value === $option->get();
     }
 }

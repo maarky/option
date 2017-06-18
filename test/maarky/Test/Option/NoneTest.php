@@ -20,12 +20,6 @@ class NoneTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($none, $none->flatMap(function(){ return true; }));
     }
 
-    public function testForeach()
-    {
-        $none = new None;
-        $this->assertNull($none->foreach(function(){ echo 'a'; }));
-    }
-
     public function testForeach_doesNotCallFunction()
     {
         $none = new None;

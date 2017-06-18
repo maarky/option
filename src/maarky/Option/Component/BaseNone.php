@@ -82,7 +82,7 @@ trait BaseNone
      */
     public function foreach (callable $each)
     {
-        //do nothing on None
+        return $this;
     }
 
     /**

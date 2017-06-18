@@ -10,7 +10,7 @@ abstract class Option
         return !is_null($value);
     }
 
-    public static function new($value)
+    public static function new($value): Option
     {
         $namespace = get_called_class()::getCalledNamespace();
         if(get_called_class()::validate($value)) {

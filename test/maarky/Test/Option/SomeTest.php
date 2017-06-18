@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace maarky\Test\Option;
 
+use maarky\Option\Option;
 use maarky\Option\None;
 use maarky\Option\Some;
 use maarky\Option\Type\Bool\Some as BoolSome;
@@ -162,15 +163,17 @@ class SomeTest extends \PHPUnit_Framework_TestCase
 
     public function testForEach()
     {
-        $value = 'echo';
-        $some = new Some($value);
-        $func = function($value) { echo $value; };
+        $some = new Some(1);
+        $callable = new class() {
+            public $called = false;
 
-        ob_start();
-        $some->foreach($func);
-        $forEach = ob_get_contents();
-        ob_end_clean();
-        $this->assertEquals($value, $forEach);
+            public function __invoke()
+            {
+                $this->called = true;
+            }
+        };
+        $some->foreach($callable);
+        $this->assertTrue($callable->called);
     }
 
     public function testOrElse()
