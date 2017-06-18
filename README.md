@@ -484,14 +484,35 @@ Usage Examples
 Filtering
 ---------
 
-Suppose you have a User class and an AdminUser class that extends User. You get the current user but you don't know if
-you are getting a User or an AdminUser and you only want an AdminUser.
+Suppose you have a User repository with a findByEmail() method and a findByLogin() method. It is simple for one method 
+to use the other with a filter.
 
-    //$user is an AdminUser
-    $user = getCurrentUser()->filter(function(User $user) { return $user->isAdmin(); }); //$user is a Some
-    
-    //$user is an NOT an AdminUser
-    $user = getCurrentUser()->filter(function(User $user) { return $user->isAdmin(); }); //$user is a None
+    class UserRepository
+    {
+        public function findByEmail(string $email): Option
+        {
+            $result = $this->db->execute('SELECT * FROM users WHERE email = ?', [$email], [\PDO::PARAM_STR]);
+            if(1 == $result->rowCount()) {
+                retun new Some(new User($result->fetchRow()));
+            }
+            return new None;
+        }
+         
+        pubic function findByLogin(string $email, string $password): Option
+        {
+            return $this->findByEmail($email)
+                        ->filter(function(User $user) use($password) {
+                            return password_verify($password, $user->getPasswordHash());
+                        });
+        }
+    }
+
+In this example findByEmail() does the work of locating a user. If we follow the happy path and the login is correct, 
+then when findByLogin() calls findByEmail() it will get back a Some. Since the password is correct password_verify() 
+will return TRUE and filter() will return $this. So findByLogin() will return a Some. However, if the email is correct 
+and the password is wrong then password_verify() will return false and filter will return a None which will be returned 
+by findByLogin(). If the email is not found then findByEmail() will return a None. Since None::filter() ignores the 
+callback and always returns $this the None you get back from findByEmail() will immediately be returned by findByLogin().
 
 Mapping
 -------
