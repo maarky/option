@@ -1,8 +1,9 @@
 PHP Options
 ===========
 
-Options are generally used as a return value for a function that may or may not have a value to return.
-For example, when you call a find() method on a repository object it may or may not find the entity you are looking for.
+Options are a type of object used when a value may or may not exist, like as a return value for a function that may or 
+may not have a value to return. For example, when you call a find() method on a repository object it may or may not find 
+the entity you are looking for.
 
 My favorite example of how an Option could be used in PHP is the strpos() function. Instead of returning an integer or
 FALSE it could return a Some(integer) or a None. This would allow you to do the following:
@@ -64,7 +65,7 @@ These classes are extended by 10 additional Option types, one for each PHP data 
 * String for strings (marrky\Option\Type\String\Option)
 
 Each of these extend the base Option class and are extended by their own Some and None classes. The only exception is
-that Option\Type\DateTime\Option extends Option\Type\Object\Option.
+that marrky\Option\Type\DateTime\Option extends marrky\Option\Type\Object\Option.
 
 The Option class should be used for type declarations while the Some and None classes provide the actual objects you will
 be working with. Consider the following example:
@@ -72,9 +73,9 @@ be working with. Consider the following example:
     use marrky\Option;
     use marrky\Option\None;
     use marrky\Option\Some;
-    
+     
     ...
-    
+     
     public function find(int $id): Option
     {
         $result = $this->db->execute("some SQL");
@@ -95,29 +96,50 @@ Creating Options
 
 You create an Option by instantiating a Some class or a None class. When creating a Some you must provide a value which 
 will be stored inside the Some. Also, when creating a Some you must provide a value of the correct type. The base Some
-can contain values of any type including NULL. A String Some can only accept a string, even an empty string. Creating a
+can contain values of any type except NULL. A String Some can only accept a string, even an empty string. Creating a
 Some with the wrong type of value will throw a TypeError.
 
 When creating a Some with the wrong type no type conversion is made on the value. This means that passing 1 to a String
 Some will not convert it to "1". A TypeError will be thrown. Likewise passing "1" to an Int Some will not cast it to an
 integer and passing 1 to a Float Some will not cast it to a float.
 
+    use marrky\Option\Some;
+    use marrky\Option\None;
+    use marrky\Option\Type\Int\Some as IntSome;
+    use marrky\Option\Type\Null\Some as NullSome;
+     
     new Some(1);// works
     new Some('1');// works
     new Some(null);// works
-    
-    new Int\Some(1);// works
-    new Int\Some('1');// throws TypeError
-    new Int\Some(1.0);// throws TypeError
-    new Int\Some(null);// throws TypeError
-    new Int\Some('');// throws TypeError
-    
-    new Null\Some(null);// works
-    new Null\Some('');// throws TypeError
-    
+     
+    new IntSome(1);// works
+    new IntSome('1');// throws TypeError
+    new IntSome(1.0);// throws TypeError
+    new IntSome(null);// throws TypeError
+    new IntSome('');// throws TypeError
+     
+    new NullSome(null);// works
+    new NullSome('');// throws TypeError
+     
     new None(); // works
     new None(1); // the 1 is ignored
     new None(''); // the empty string is ignored
+    
+Creating Options With Static None() Method
+------------------------------------------
+
+You can also create an option by using the static new() method on an abstract Option class. Pass any value to the new 
+method on any abstract Option class and it will return a Some if it is a valid value, otherwise it returns a None.
+
+    use marrky\Option\Option;
+    use marrky\Option\Type\Int\Option as IntOption;
+     
+    Option::new(1); //returns Some
+    Option::new(null); //returns None
+     
+    IntOption::new(1); //returns Int Some
+    IntOption::new('one'); //returns Int None
+    
 
 Methods For Determining Option Type
 -----------------------------------
@@ -148,7 +170,7 @@ None will always return itself.
 
     $some = new Some(5);
     $some->get(); //returns 5
-    
+     
     $none = new None;
     $none->get(); //returns None
 
@@ -159,7 +181,7 @@ None will always return $else.
 
     $some = new Some(5);
     $some->getOrElse(7); //returns 5
-    
+     
     $none = new None;
     $none->getOrElse(7); //returns 7
 
@@ -170,7 +192,7 @@ None will always call $else and return it.
 
     $some = new Some(5);
     $some->getOrCall(function() { return 7; }); //returns 5
-    
+     
     $none = new None;
     $none->getOrCall(function() { return 7; }); //returns 7
 
@@ -184,28 +206,26 @@ None will always return $else.
 
     $some = new Some(5);
     $some->orElse(new Some(7)); //returns Some(5)
-    
+     
     $none = new None;
     $none->orElse(new Some(7)); //returns Some(7)
 
 ###orCall(callable $else)
 
-If the $else function is called on a None and does not return an Option the return value will be wrapped into a Some. 
-It will create a Some of the same type if possible, otherwise it will create a base Some. 
-
 Some will always return itself.  
-None will always call $else and return its return value as an Option.
+None will always call $else and return its return value. The $else function must return an Option. 
 
     $some = new Some(5);
     $some->orCall(function() { return new Some(7); }); //returns Some(5)
-    $some->orCall(function() { return 7; }); //returns Some(5)
-    
+    $some->orCall(function() { return 7; }); //returns Some(5) because the function is ignored by Some
+     
     $none = new None;
     $none->orCall(function() { return new Some(7); }); //returns Some(7)
-    
+    $none->orCall(function() { return 7; }); //throws an UnexpectedValueException exception
+     
     $intSome = new Int\None;
     $intNone->orCall(function() { return new Some(7); }); // returns Some(7)
-    $intNone->orCall(function() { return 7; }); // returns Int\Some(7)
+    $intNone->orCall(function() { return 7; }); //throws an UnexpectedValueException exception
     $intNone->orCall(function() { return new String\None; }); // returns String\None
 
 Filtering An Option
@@ -222,7 +242,7 @@ None always returns itself.
     $some = new Some(5);
     $some->filter(function(int $value) { return $value > 1; }); //returns Some(5)
     $some->filter(function(int $value) { return $value > 5; }); //returns None
-    
+     
     $none = new None;
     $none->filter(function(int $value) { return $value > 1; }); //returns None
     $none->filter(function(int $value) { return $value > 5; }); //returns None
@@ -244,11 +264,11 @@ None will always return itself.
     $some->map(function(int $value) { return (string) $value; }); //returns Some('5')
     $some->map(function(int $value) { return new Some($value); }); //returns Some(Some(5))
     $some->map(function(int $value) { return new None; }); //returns Some(None)
-    
+     
     $intSome = new Int\Some(5);
     $some->map(function(int $value) { return $value * 2; }); //returns Int\Some(10)
     $some->map(function(int $value) { return (string) $value; }); //returns Option\Some('5')
-    
+     
     $none = new None;
     $none->map(function(int $value) { return $value * 2; }); //returns None
     $none->map(function(int $value) { return (string) $value; }); //returns None
@@ -257,18 +277,17 @@ None will always return itself.
 
 ###flatMap(callback $map)
 
-This works in much the same way as map() except it will never return an Option containing another Option.
+This works in much the same way as map() except the callback must return an Option.
 
     $some = new Some(5);
-    $some->flatMap(function(int $value) { return $value * 2; }); //returns Some(10)
-    $some->flatMap(function(int $value) { return (string) $value; }); //returns Some('5')
-    $some->flatMap(function(int $value) { return new Some($value); }); //returns Some(5)
+    $some->flatMap(function(int $value) { return $value * 2; }); ////throws an UnexpectedValueException exception
+    $some->flatMap(function(int $value) { return new Some((string) $value); }); //returns Some('5')
     $some->flatMap(function(int $value) { return new None; }); //returns None
-    
+     
     $intSome = new Int\Some(5);
-    $some->flatMap(function(int $value) { return $value * 2; }); //returns Int\Some(10)
-    $some->flatMap(function(int $value) { return (string) $value; }); //returns Option\Some('5')
-    
+    $some->flatMap(function(int $value) { return $value * 2; }); ////throws an UnexpectedValueException exception
+    $some->flatMap(function(int $value) { return new Some((string) $value); }); //returns Option\Some('5')
+     
     $none = new None;
     $none->flatMap(function(int $value) { return $value * 2; }); //returns None
     $none->flatMap(function(int $value) { return (string) $value; }); //returns None
@@ -278,21 +297,21 @@ This works in much the same way as map() except it will never return an Option c
 Performing An Operation Using An Options Value
 ----------------------------------------------
 
-###foreach(callback $each)
+###foreach(callback $each): Option
 
-This method simply calls the $each function passing in the Options value. It never returns anything.
+This method simply calls the $each function passing in the Options value. It returns $this.
 
 Some calls the $each function passing in the Options value.  
 None ignores the callback and does nothing.
 
     $some = new Some('Hello');
-    $some->foreach(function(string $value) { echo $value; }); //echoes 'Hello', returns nothing.
-    
+    $some->foreach(function(string $value) { echo $value; }); //echoes 'Hello'.
+     
     $some = new Some('/path/to/file');
-    $some->foreach(function(string $value) { unlink($value); }); //deletes a file, returns nothing.
-    
+    $some->foreach(function(string $value) { unlink($value); }); //deletes a file.
+     
     $none = new None;
-    $none->foreach(function(string $value) { echo $value; }); //does nothing, returns nothing.
+    $none->foreach(function(string $value) { echo $value; }); //does nothing.
 
 Testing Equality Between Two Options
 ------------------------------------
@@ -309,10 +328,10 @@ None returns TRUE if the provided Option is the same type of None, otherwise FAL
     $some1->equals(new Some('1')); //returns FALSE
     $some1->equals(new Some(2)); //returns FALSE
     $some1->equals(new None); //returns FALSE
-    
+     
     $intSome = new Int\Some(1);
     $intSome->equals($some1); // returns false
-    
+     
     $none = new None;
     $none->equals(new None); // returns TRUE
     $none->equals(new Int\None); // returns FALSE
@@ -324,7 +343,7 @@ Creating Custom Options
 Creating custom options is simple. All you have to do is create an Option class that extends the base Option class or
 another appropriate Option class. Give it a validate($value) method that checks that the value is of the right type and
 returns a boolean. Then create a new Some class and None class in the same namespace as your Option class, have them
-extend your new Option class and mix in the BaseSome or BaseNone trait.
+extend your new Option class and mix in the BaseSome or BaseNone traits.
 
 Entity Option Example
 ---------------------
@@ -336,12 +355,12 @@ you also know that if the method returns a Some it will contain a User.
 User/Option/Option.php
     
     namespace User\Option;
-    
+     
     use User;
-    
+     
     class Option extends \marrky\Option\Type\Object\Option
     {
-        protected function validate($value): bool
+        public static function validate($value): bool
         {
             return parent::validate($value) && $value istanceof User;
         }
@@ -350,7 +369,7 @@ User/Option/Option.php
 User/Option/Some.php
 
     namespace User\Option;
-    
+     
     class Some extends Option
     {
         use maarky\Option\Component\BaseSome;
@@ -359,7 +378,7 @@ User/Option/Some.php
 User/Option/None.php
 
     namespace User\Option;
-    
+     
     class None extends Option
     {
         use maarky\Option\Component\BaseNone;
@@ -373,9 +392,9 @@ You would use this Option in your repository class in the same way as we did in 
     use User\Option\Option;
     use User\Option\None;
     use User\Option\Some;
-    
+     
     ...
-    
+     
     public function find(int $id): Option
     {
         $result = $this->db->execute("some SQL");
@@ -394,10 +413,10 @@ You might also be working with an array and you want to be sure you get the type
 Point/Option/Option.php
     
     namespace Point\Option;
-    
+     
     class Option extends \marrky\Option\Type\Arr\Option
     {
-        protected function validate($value): bool
+        public static function validate($value): bool
         {
             return parent::validate($value) && 2 == count($value) && isset($value['lat']) && isset($value['lon'])
                    && is_float($value['lat']) && is_float($value['lon']);
@@ -407,7 +426,7 @@ Point/Option/Option.php
 Point/Option/Some.php
 
     namespace Point\Option;
-    
+     
     class Some extends Option
     {
         use maarky\Option\Component\BaseSome;
@@ -416,7 +435,7 @@ Point/Option/Some.php
 Point/Option/None.php
 
     namespace Point\Option;
-    
+     
     class None extends Option
     {
         use maarky\Option\Component\BaseNone;
@@ -428,9 +447,12 @@ And this is how you would use it:
     $point->filter(function(array $point) { return $point['lat'] > 123}); // returns the Point\Option\Some
     $point->filter(function(array $point) { return $point['lat'] < 123}); // returns Point\Option\None
     new Point\Option\Some(['lat' => 123.456, 'lon' => 12.34, 'elevation' => 12345]); //throws TypeError
-    
+     
     $none = new Point\Option\None;
     $none->getOrElse(['lat' => 123.456, 'lon' => 12.34]); //returns the array
+     
+    Point\Option\Option::new(['lat' => 123.456, 'lon' => 12.34]); //returns Point\Option\Some
+    Point\Option\Option::new(['lat' => 123.456, 'lon' => 12.34, 'elevation' => 12345]); //returns Point\Option\None
 
 Overriding Equals
 -----------------
@@ -486,8 +508,6 @@ What if you want to get the value as a float Some?
         return Float\Some($number * 2.5);
     });
 
-If you did this with the map() method you would get a Some(Int\Some(5)) while flatMap() will give you a
-Float\Some(5.0);
 
 Replacing An Option
 -------------------
@@ -557,22 +577,22 @@ What if you have a User class that expects a name, email address and optionally 
     class User
     {
         ...
-        
+         
         public function __construct(string $name, string $email, String\Option $phoneNumber)
         {
             ...
         }
     }
-    
+     
     //we do have a phone number
     $user = new User('John Dough', 'john@example.com', new String\Some('123-456-7890'));
-    
+     
     //we do not have a phone number
     $user = new User('John Dough', 'john@example.com', new String\None);
 
 Now that you have your user object how do you know if that user has a phone number? Without options you would need to
 either add a hasPhoneNumber() method to your User object or you would have to get the phone number and then check if it
-is null or empty. With options you know that getPhoneNumber() will return a Some or a None and you can ask either if it
+is null or empty. With options you know that getPhoneNumber() will return a Some or a None and you can ask if it
 has a value. Your user object doesn't care.
 
     //without options with PHP < 5.5
@@ -580,12 +600,12 @@ has a value. Your user object doesn't care.
     if(empty($phone)) {
         $phone = 'unknown';
     }
-    
+     
     //without options with PHP >= 5.5
     if(empty($user->getPhone())) {
         $phone = 'unknown';
     }
-    
+     
     //with options
     if($user->getPhone()->isEmpty()) {
         $phone = 'unknown';
@@ -597,5 +617,4 @@ has a value. Your user object doesn't care.
     
 PHP 5.5 is better than PHP 5.4 and earlier but without options what will getPhone() return if the phone is unknown?
 Will it return null, an empty string or possibly false? You might have different developers writing very different code
-to determine whether or not there is a phone number but Options provide a standard way of determining this. You can also
-handle cases where there is no phone without conditions.
+to determine whether or not there is a phone number but Options provide a standard way of determining this.
