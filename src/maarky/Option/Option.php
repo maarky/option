@@ -10,10 +10,16 @@ abstract class Option
         return !is_null($value);
     }
 
-    public static function new($value): Option
+    /**
+     * @param $value
+     * @param callable|null $filter Must take $value as arg and return a boolean
+     * @return Option
+     */
+    final public static function new($value, callable $filter = null): Option
     {
         $namespace = get_called_class()::getCalledNamespace();
-        if(get_called_class()::validate($value)) {
+        $filter = $filter ?: function() { return true; };
+        if(get_called_class()::validate($value) && $filter($value)) {
             $someClass = $namespace . '\\Some';
             return new $someClass($value);
         }

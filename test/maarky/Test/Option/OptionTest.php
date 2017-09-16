@@ -13,9 +13,21 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('maarky\Option\Some', Option::new(1));
     }
 
+    public function testNew_Some_Filter()
+    {
+        $value = 1;
+        $this->assertInstanceOf('maarky\Option\Some', Option::new($value, function($val) use($value) { return $val === $value; }));
+    }
+
     public function testNew_None()
     {
         $this->assertInstanceOf('maarky\Option\None', Option::new(null));
+    }
+
+    public function testNew_None_Filter()
+    {
+        $value = 1;
+        $this->assertInstanceOf('maarky\Option\None', Option::new($value, function($val) use($value) { return $val !== $value; }));
     }
 
     public function testNew_Some_TypeInt()
