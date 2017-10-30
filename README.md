@@ -146,14 +146,14 @@ Methods For Determining Option Type
 
 When you receive an Option you may need to know whether you got a Some or a None.
 
-###isDefined() isSome()
+### isDefined() isSome()
 
 These methods are interchangeable.
 
 Some will always return TRUE.  
 None will always return FALSE.
 
-###isEmpty() isNone()
+### isEmpty() isNone()
 
 These methods are interchangeable. 
 
@@ -163,7 +163,7 @@ None will always return TRUE.
 Methods For Retrieving Option Values
 ------------------------------------
 
-###get()
+### get()
 
 Some will always return the stored value.  
 None will always return itself.
@@ -174,7 +174,7 @@ None will always return itself.
     $none = new None;
     $none->get(); //returns None
 
-###getOrElse($else)
+### getOrElse($else)
 
 Some will always return the stored value.  
 None will always return $else.
@@ -185,7 +185,7 @@ None will always return $else.
     $none = new None;
     $none->getOrElse(7); //returns 7
 
-###getOrCall(callable $call)
+### getOrCall(callable $call)
 
 Some will always return the stored value.  
 None will always call $else and return it.
@@ -199,7 +199,7 @@ None will always call $else and return it.
 Replacing An Option
 -------------------
 
-###orElse(Option $else)
+### orElse(Option $else)
 
 Some will always return itself.  
 None will always return $else.
@@ -210,7 +210,7 @@ None will always return $else.
     $none = new None;
     $none->orElse(new Some(7)); //returns Some(7)
 
-###orCall(callable $else)
+### orCall(callable $else)
 
 Some will always return itself.  
 None will always call $else and return its return value. The $else function must return an Option. 
@@ -231,7 +231,7 @@ None will always call $else and return its return value. The $else function must
 Filtering An Option
 -------------------
 
-###filter(callable $filter)
+### filter(callable $filter)
 
 $filter must be a callable that takes the options value and returns a boolean.
 
@@ -247,7 +247,7 @@ None always returns itself.
     $none->filter(function(int $value) { return $value > 1; }); //returns None
     $none->filter(function(int $value) { return $value > 5; }); //returns None
     
-###filterNot(callable $filter)
+### filterNot(callable $filter)
 
 filterNot() is the inverse of the filter() method.
  
@@ -268,7 +268,7 @@ None always returns itself.
 Mapping an Option
 -----------------
 
-###map(callback $map)
+### map(callback $map)
 
 $map takes the Option value and returns any value. This value is returned wrapped in an Option. If the callback returns
 an Option it will be wrapped in a Some. If the callback does not return an Option it will return a Some of the same type
@@ -293,7 +293,7 @@ None will always return itself.
     $none->map(function(int $value) { return new Some($value); }); //returns None
     $none->map(function(int $value) { return new None; }); //returns None
 
-###flatMap(callback $map)
+### flatMap(callback $map)
 
 This works in much the same way as map() except the callback must return an Option.
 
@@ -315,7 +315,7 @@ This works in much the same way as map() except the callback must return an Opti
 Performing An Operation Using An Options Value
 ----------------------------------------------
 
-###foreach(callback $each): Option
+### foreach(callback $each): Option
 
 This method simply calls the $each function passing in the Options value. It returns $this.
 
@@ -334,7 +334,7 @@ None ignores the callback and does nothing.
 Testing Equality Between Two Options
 ------------------------------------
 
-###equals(option $option)
+### equals(option $option)
 
 The equals method checks if the two Options are the same type and if their values are equal and returns a Boolean.
 
