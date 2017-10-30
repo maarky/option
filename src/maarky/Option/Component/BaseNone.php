@@ -68,6 +68,15 @@ trait BaseNone
     }
 
     /**
+     * @param callable $filter returns boolean
+     * @return Option
+     */
+    public function filterNot(callable $filter): Option
+    {
+        return $this;
+    }
+
+    /**
      * @param callable $map
      * @return Option
      */

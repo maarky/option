@@ -93,6 +93,12 @@ abstract class Option
     abstract public function filter(callable $filter): Option;
 
     /**
+     * @param callable $filter returns boolean
+     * @return Option
+     */
+    abstract public function filterNot(callable $filter): Option;
+
+    /**
      * @param callable $map
      * @return Option
      */

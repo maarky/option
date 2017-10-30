@@ -78,6 +78,19 @@ trait BaseSome
     }
 
     /**
+     * @param callable $filter returns boolean
+     * @return Option
+     */
+    public function filterNot(callable $filter): Option
+    {
+        if(false === $filter($this->value)) {
+            return $this;
+        }
+        $noneClass = self::getCalledNamespace() . '\\None';
+        return new $noneClass;
+    }
+
+    /**
      * @param callable $map
      * @return Option
      */

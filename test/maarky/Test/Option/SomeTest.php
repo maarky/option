@@ -161,6 +161,20 @@ class SomeTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('maarky\Option\None', $some->filter(array($this, 'callbackFalse')));
     }
 
+    public function testFilterNot()
+    {
+        $filter = function() { return false; };
+        $some = new Some(2);
+        $this->assertEquals($some, $some->filterNot($filter));
+    }
+
+    public function testFilterNot_true()
+    {
+        $filter = function() { return true; };
+        $some = new Some(2);
+        $this->assertEquals(new None, $some->filterNot($filter));
+    }
+
     public function testForEach()
     {
         $some = new Some(1);

@@ -236,12 +236,30 @@ Filtering An Option
 $filter must be a callable that takes the options value and returns a boolean.
 
 Some will return itself if the callback returns TRUE, otherwise it returns a None. It will return the same type of none 
-as itself. In other words a String Some will return a String None if the callback returns false.  
+as itself. In other words a String Some will return a String None if the callback returns FALSE.  
 None always returns itself.
 
     $some = new Some(5);
     $some->filter(function(int $value) { return $value > 1; }); //returns Some(5)
     $some->filter(function(int $value) { return $value > 5; }); //returns None
+     
+    $none = new None;
+    $none->filter(function(int $value) { return $value > 1; }); //returns None
+    $none->filter(function(int $value) { return $value > 5; }); //returns None
+    
+###filterNot(callable $filter)
+
+filterNot() is the inverse of the filter() method.
+ 
+$filter must be a callable that takes the options value and returns a boolean.
+
+Some will return itself if the callback returns FALSE, otherwise it returns a None. It will return the same type of none 
+as itself. In other words a String Some will return a String None if the callback returns TRUE.  
+None always returns itself.
+
+    $some = new Some(5);
+    $some->filter(function(int $value) { return $value <= 5; }); //returns None
+    $some->filter(function(int $value) { return $value > 5; }); //returns Some(5)
      
     $none = new None;
     $none->filter(function(int $value) { return $value > 1; }); //returns None
