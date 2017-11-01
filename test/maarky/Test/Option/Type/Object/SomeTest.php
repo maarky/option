@@ -3,39 +3,40 @@ declare(strict_types=1);
 
 namespace maarky\Test\Option\Type\Object;
 
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use maarky\Option\Type\Object\Some;
 use maarky\Option\Type\Object\None;
 use maarky\Option\Some as BaseSome;
 
-class SomeTest extends \PHPUnit_Framework_TestCase
+class SomeTest extends TestCase
 {
     public function testSome()
     {
-        new Some(new StdClass);
+        $this->assertInstanceOf('maarky\Option\Type\Object\Some', new Some(new StdClass));
     }
 
     public function testSome_withDateTime()
     {
-        new Some(new \DateTime);
+        $this->assertInstanceOf('maarky\Option\Type\Object\Some', new Some(new \DateTime()));
     }
 
     public function testSome_withInteger()
     {
-        $this->setExpectedException('TypeError');
-        new Some(1);
+        $this->expectException('TypeError');
+        $this->assertInstanceOf('maarky\Option\Type\Object\Some', new Some(1));
     }
 
     public function testSome_wrongType()
     {
-        $this->setExpectedException('TypeError');
-        new Some('a');
+        $this->expectException('TypeError');
+        $this->assertInstanceOf('maarky\Option\Type\Object\Some', new Some('a'));
     }
 
     public function testSome_withNull()
     {
-        $this->setExpectedException('TypeError');
-        new Some(null);
+        $this->expectException('TypeError');
+        $this->assertInstanceOf('maarky\Option\Type\Object\Some', new Some(null));
     }
 
     public function testFilter()

@@ -3,32 +3,32 @@ declare(strict_types=1);
 
 namespace maarky\Test\Option\Type\Null;
 
+use PHPUnit\Framework\TestCase;
 use maarky\Option\Type\Null\Some;
 use maarky\Option\Type\Null\None;
-use maarky\Option\Some as BaseSome;
 
-class SomeTest extends \PHPUnit_Framework_TestCase
+class SomeTest extends TestCase
 {
     public function testSome()
     {
-        new Some(null);
+        $this->assertInstanceOf('maarky\Option\Type\Null\Some', new Some(null));
     }
     public function testSome_withInteger()
     {
-        $this->setExpectedException('TypeError');
-        new Some(1);
+        $this->expectException('TypeError');
+        $this->assertInstanceOf('maarky\Option\Type\Null\Some', new Some(1));
     }
 
     public function testSome_wrongType()
     {
-        $this->setExpectedException('TypeError');
-        new Some('a');
+        $this->expectException('TypeError');
+        $this->assertInstanceOf('maarky\Option\Type\Null\Some', new Some('a'));
     }
 
     public function testSome_withEmptyString()
     {
-        $this->setExpectedException('TypeError');
-        new Some('');
+        $this->expectException('TypeError');
+        $this->assertInstanceOf('maarky\Option\Type\Null\Some', new Some(''));
     }
 
     public function testFilter()

@@ -3,40 +3,41 @@ declare(strict_types=1);
 
 namespace maarky\Test\Option\Type\DateTime;
 
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use DateTime;
 use maarky\Option\Type\DateTime\Some;
 use maarky\Option\Type\DateTime\None;
 use maarky\Option\Some as BaseSome;
 
-class SomeTest extends \PHPUnit_Framework_TestCase
+class SomeTest extends TestCase
 {
     public function testSome()
     {
-        new Some(new DateTime);
+        $this->assertInstanceOf('maarky\Option\Type\DateTime\Some', new Some(new DateTime));
     }
     public function testSome_withInteger()
     {
-        $this->setExpectedException('TypeError');
-        new Some(1);
+        $this->expectException('TypeError');
+        $this->assertInstanceOf('maarky\Option\Type\DateTime\Some', new Some(1));
     }
 
     public function testSome_wrongType()
     {
-        $this->setExpectedException('TypeError');
-        new Some('a');
+        $this->expectException('TypeError');
+        $this->assertInstanceOf('maarky\Option\Type\DateTime\Some', new Some('a'));
     }
 
     public function testSome_wrongTypeIsObject()
     {
-        $this->setExpectedException('TypeError');
-        new Some(new stdClass);
+        $this->expectException('TypeError');
+        $this->assertInstanceOf('maarky\Option\Type\DateTime\Some', new Some(new stdClass));
     }
 
     public function testSome_withNull()
     {
-        $this->setExpectedException('TypeError');
-        new Some(null);
+        $this->expectException('TypeError');
+        $this->assertInstanceOf('maarky\Option\Type\DateTime\Some', new Some(null));
     }
 
     public function testFilter()

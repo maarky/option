@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace maarky\Test\Option\Type\Bool;
 
+use PHPUnit\Framework\TestCase;
 use maarky\Option\Type\Bool\None;
 use maarky\Option\Type\Bool\Some;
 
-class NoneTest extends \PHPUnit_Framework_TestCase
+class NoneTest extends TestCase
 {
     public function testFilter()
     {

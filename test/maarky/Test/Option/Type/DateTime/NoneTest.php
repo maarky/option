@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace maarky\Test\Option\Type\DateTime;
 
+use PHPUnit\Framework\TestCase;
 use DateTime;
 use maarky\Option\Type\DateTime\None;
 use maarky\Option\Type\DateTime\Some;
 
-class NoneTest extends \PHPUnit_Framework_TestCase
+class NoneTest extends TestCase
 {
     public function testFilter()
     {

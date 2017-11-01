@@ -3,10 +3,11 @@
 
 namespace maarky\Test\Option;
 
+use PHPUnit\Framework\TestCase;
 use maarky\Option\Option;
 
 
-class OptionTest extends \PHPUnit_Framework_TestCase
+class OptionTest extends TestCase
 {
     public function testNew_Some()
     {

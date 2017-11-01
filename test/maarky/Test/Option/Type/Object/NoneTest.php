@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace maarky\Test\Option\Type\Object;
 
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use maarky\Option\Type\Object\None;
 use maarky\Option\Type\Object\Some;
 
-class NoneTest extends \PHPUnit_Framework_TestCase
+class NoneTest extends TestCase
 {
     public function testFilter()
     {

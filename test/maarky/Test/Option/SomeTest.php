@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace maarky\Test\Option;
 
-use maarky\Option\Option;
+use PHPUnit\Framework\TestCase;
 use maarky\Option\None;
 use maarky\Option\Some;
 use maarky\Option\Type\Bool\Some as BoolSome;
 use maarky\Option\Type\Bool\None as BoolNone;
 
-class SomeTest extends \PHPUnit_Framework_TestCase
+class SomeTest extends TestCase
 {
     public function testGet()
     {
