@@ -93,7 +93,7 @@ class SomeTest extends TestCase
 
     public function testFlatMap_callbackMustReturnOption()
     {
-        $this->expectException('UnexpectedValueException');
+        $this->expectException('TypeError');
         $some = new Some(2);
         $some->flatMap(function() { return 1; });
     }

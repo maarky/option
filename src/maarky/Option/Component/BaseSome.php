@@ -96,11 +96,7 @@ trait BaseSome
      */
     public function flatMap(callable $map): Option
     {
-        $mapped = $map($this->value);
-        if(!$mapped instanceof Option) {
-            throw new \UnexpectedValueException('The callback must return an Option.');
-        }
-        return $mapped;
+        return $map($this->value);
     }
 
     /**

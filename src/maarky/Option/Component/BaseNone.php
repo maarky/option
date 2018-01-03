@@ -25,11 +25,7 @@ trait BaseNone
 
     public function orCall(callable $else): Option
     {
-        $option = $else();
-        if(!$option instanceof Option) {
-            throw new \UnexpectedValueException('callable must return an option.');
-        }
-        return $option;
+        return $else();
     }
 
     /**
