@@ -32,6 +32,21 @@ class NoneTest extends TestCase
         }
     }
 
+    public function testForNone()
+    {
+        $none = new None;
+        $callable = new class() {
+            public $called = false;
+
+            public function __invoke(None $none)
+            {
+                $this->called = true;
+            }
+        };
+        $none->fornone($callable);
+        $this->assertTrue($callable->called);
+    }
+
     public function testGet()
     {
         $none = new None;
@@ -49,7 +64,7 @@ class NoneTest extends TestCase
     {
         $none = new None;
         $else = 1;
-        $this->assertEquals($else, $none->getOrCall(function() use($else) { return $else; }));
+        $this->assertEquals($else, $none->getOrCall(function(None $none) use($else) { return $else; }));
     }
 
     public function testIsDefined()
@@ -81,7 +96,7 @@ class NoneTest extends TestCase
     {
         $none = new None;
         $some = new Some(1);
-        $this->assertSame($some, $none->orCall(function() use($some) { return $some; }));
+        $this->assertSame($some, $none->orCall(function(None $none) use($some) { return $some; }));
     }
 
     public function testEquals()

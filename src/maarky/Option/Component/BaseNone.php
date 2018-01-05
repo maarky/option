@@ -20,12 +20,12 @@ trait BaseNone
 
     public function getOrCall(callable $call)
     {
-        return $call();
+        return $call($this);
     }
 
     public function orCall(callable $else): Option
     {
-        return $else();
+        return $else($this);
     }
 
     /**
@@ -83,10 +83,20 @@ trait BaseNone
 
     /**
      * @param callable $each
-     * @return void
+     * @return Option
      */
-    public function foreach (callable $each)
+    public function foreach (callable $each): Option
     {
+        return $this;
+    }
+
+    /**
+     * @param callable $none
+     * @return Option
+     */
+    public function fornone(callable $none): Option
+    {
+        $none($this);
         return $this;
     }
 

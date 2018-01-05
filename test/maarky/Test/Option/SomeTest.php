@@ -43,9 +43,9 @@ class SomeTest extends TestCase
     public function testFlatMap()
     {
         $value = 2;
-        $double = function(int $num) { return new Some($num * 2); };
-        $expected = $double($value);
+        $double = function(int $num, Some $some) { return new Some($num * 2); };
         $some = new Some($value);
+        $expected = $double($value, $some);
         $this->assertEquals($expected, $some->flatMap($double));
     }
 
@@ -188,6 +188,21 @@ class SomeTest extends TestCase
         };
         $some->foreach($callable);
         $this->assertTrue($callable->called);
+    }
+
+    public function testForNone()
+    {
+        $some = new Some(1);
+        $callable = new class() {
+            public $called = false;
+
+            public function __invoke()
+            {
+                $this->called = true;
+            }
+        };
+        $some->fornone($callable);
+        $this->assertFalse($callable->called);
     }
 
     public function testOrElse()

@@ -106,9 +106,15 @@ abstract class Option
 
     /**
      * @param callable $each
-     * @return void
+     * @return Option
      */
-    abstract public function foreach(callable $each);
+    abstract public function foreach(callable $each): Option;
+
+    /**
+     * @param callable $none
+     * @return Option
+     */
+    abstract public function fornone(callable $none): Option;
 
     /**
      * @param callable $map

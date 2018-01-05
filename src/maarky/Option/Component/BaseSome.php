@@ -91,21 +91,21 @@ trait BaseSome
     }
 
     /**
-     * @param callable $map
-     * @return Option
-     */
-    public function flatMap(callable $map): Option
-    {
-        return $map($this->value);
-    }
-
-    /**
      * @param callable $each
      * @return void
      */
-    public function foreach (callable $each)
+    public function foreach (callable $each): Option
     {
         $each($this->value);
+        return $this;
+    }
+
+    /**
+     * @param callable $none
+     * @return Option
+     */
+    public function fornone(callable $none): Option
+    {
         return $this;
     }
 
@@ -121,6 +121,15 @@ trait BaseSome
             return new $self($mapped);
         }
         return new Some($mapped);
+    }
+
+    /**
+     * @param callable $map
+     * @return Option
+     */
+    public function flatMap(callable $map): Option
+    {
+        return $map($this->value, $this);
     }
 
     /**
