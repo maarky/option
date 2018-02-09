@@ -5,25 +5,25 @@ namespace maarky\Test\Option;
 
 use PHPUnit\Framework\TestCase;
 use maarky\Option\None;
-use maarky\Option\Some;
+use maarky\Option\Option;
 
 class NoneTest extends TestCase
 {
     public function testFilter()
     {
-        $none = new None;
+        $none = Option::new(null);
         $this->assertEquals($none, $none->filter(function(){ return true; }));
     }
 
     public function testFlatMap()
     {
-        $none = new None;
+        $none = Option::new(null);
         $this->assertEquals($none, $none->flatMap(function(){ return true; }));
     }
 
     public function testForeach_doesNotCallFunction()
     {
-        $none = new None;
+        $none = Option::new(null);
         try {
             $none->foreach(function(){ throw new \Exception; });
             $this->assertTrue(true);
@@ -32,9 +32,9 @@ class NoneTest extends TestCase
         }
     }
 
-    public function testForNone()
+    public function testForNothing()
     {
-        $none = new None;
+        $none = Option::new(null);
         $callable = new class() {
             public $called = false;
 
@@ -43,72 +43,73 @@ class NoneTest extends TestCase
                 $this->called = true;
             }
         };
-        $none->fornone($callable);
+        $none->fornothing($callable);
         $this->assertTrue($callable->called);
     }
 
     public function testGet()
     {
-        $none = new None;
-        $this->assertEquals($none, $none->get());
+        $this->expectException(\TypeError::class);
+        $none = Option::new(null);
+        $none->get();
     }
 
     public function testGetOrElse()
     {
-        $none = new None;
+        $none = Option::new(null);
         $else = 1;
         $this->assertEquals($else, $none->getOrElse($else));
     }
 
     public function testGetOrCall()
     {
-        $none = new None;
+        $none = Option::new(null);
         $else = 1;
         $this->assertEquals($else, $none->getOrCall(function(None $none) use($else) { return $else; }));
     }
 
     public function testIsDefined()
     {
-        $none = new None;
+        $none = Option::new(null);
         $this->assertFalse($none->isDefined());
     }
 
     public function testIsEmpty()
     {
-        $none = new None;
+        $none = Option::new(null);
         $this->assertTrue($none->isEmpty());
     }
 
     public function testMap()
     {
-        $none = new None;
+        $none = Option::new(null);
         $this->assertEquals($none, $none->map(function(){ return true; }));
     }
 
     public function testOrElse()
     {
-        $none = new None;
-        $some = new Some(1);
+        $none = Option::new(null);
+        $some = Option::new(1);
         $this->assertEquals($some, $none->orElse($some));
     }
 
     public function testOrCall()
     {
-        $none = new None;
-        $some = new Some(1);
+        $none = Option::new(null);
+        $some = Option::new(1);
         $this->assertSame($some, $none->orCall(function(None $none) use($some) { return $some; }));
     }
 
     public function testEquals()
     {
-        $none = new None;
+        $none = Option::new(null);
         $this->assertTrue($none->equals($none));
     }
 
     public function testEquals_false()
     {
-        $none = new None;
-        $some = new Some(1);
+        $none = Option::new(null);
+        $some = Option::new(1);
         $this->assertFalse($none->equals($some));
     }
 }

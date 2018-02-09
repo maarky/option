@@ -1,13 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace maarky\Option\Type\Callback;
 
 use maarky\Option\Component\BaseSome;
 
-/**
- * @method callback get()
- */
 class Some extends Option
 {
     use BaseSome;
+
+    public function get(): callable
+    {
+        return $this->value;
+    }
 }

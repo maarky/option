@@ -3,47 +3,63 @@ declare(strict_types=1);
 
 namespace maarky\Option\Component;
 
+use maarky\Monad\SingleContainer;
 use maarky\Option\Option;
-use maarky\Option\Some;
 
 trait BaseSome
 {
     protected $value;
 
-    public function __construct($value)
+    /**
+     * BaseSome constructor.
+     * @param $value
+     * @throws \TypeError
+     */
+    final protected function __construct($value)
     {
-        if(!self::validate($value)) {
-            throw new \TypeError;
-        }
         $this->value = $value;
     }
 
+    /**
+     * @return mixed
+     */
     public function get()
     {
         return $this->value;
     }
 
+    /**
+     * @param $else
+     * @return mixed
+     */
     public function getOrElse($else)
     {
         return $this->get();
     }
 
+    /**
+     * @param callable $call
+     * @return mixed
+     */
     public function getOrCall(callable $call)
     {
         return $this->get();
     }
 
     /**
-     * @param Option $else
-     * @return Option
-     * @throws \TypeError
+     * @param SingleContainer $else
+     * @return SingleContainer
      */
-    public function orElse(Option $else): Option
+    public function orElse(SingleContainer $else): SingleContainer
     {
         return $this;
     }
 
-    public function orCall(callable $else): Option
+    /**
+     * @param callable $else
+     * @return SingleContainer
+     */
+    public function orCall(callable $else): SingleContainer
     {
         return $this;
     }
@@ -51,7 +67,7 @@ trait BaseSome
     /**
      * @return bool
      */
-    public function isNone(): bool
+    public function isEmpty(): bool
     {
         return false;
     }
@@ -59,52 +75,51 @@ trait BaseSome
     /**
      * @return bool
      */
-    public function isSome(): bool
+    public function isDefined(): bool
     {
         return true;
     }
 
     /**
      * @param callable $filter returns boolean
-     * @return Option
+     * @return SingleContainer
      */
-    public function filter(callable $filter): Option
+    public function filter(callable $filter): SingleContainer
     {
-        if(true === $filter($this->value)) {
+        if(true === $filter($this->value, $this)) {
             return $this;
         }
-        $noneClass = self::getCalledNamespace() . '\\None';
-        return new $noneClass;
+
+        return static::new(null, function() { return false; });
     }
 
     /**
      * @param callable $filter returns boolean
-     * @return Option
+     * @return SingleContainer
      */
-    public function filterNot(callable $filter): Option
+    public function filterNot(callable $filter): SingleContainer
     {
-        if(false === $filter($this->value)) {
+        if(false === $filter($this->value, $this)) {
             return $this;
         }
-        $noneClass = self::getCalledNamespace() . '\\None';
-        return new $noneClass;
+        return static::new(null, function() { return false; });
     }
 
     /**
      * @param callable $each
-     * @return void
+     * @return SingleContainer
      */
-    public function foreach (callable $each): Option
+    public function foreach (callable $each): SingleContainer
     {
-        $each($this->value);
+        $each($this->value, $this);
         return $this;
     }
 
     /**
      * @param callable $none
-     * @return Option
+     * @return SingleContainer
      */
-    public function fornone(callable $none): Option
+    public function fornothing(callable $none): SingleContainer
     {
         return $this;
     }
@@ -112,22 +127,20 @@ trait BaseSome
     /**
      * @param callable $map
      * @return Option
+     * @throws \ReflectionException
      */
-    public function map(callable $map): Option
+    public function map(callable $map): SingleContainer
     {
-        $mapped = $map($this->value);
-        $self = self::getCalledNamespace() . '\\Some';
-        if($self::validate($mapped)) {
-            return new $self($mapped);
-        }
-        return new Some($mapped);
+        $mapped = (1 == (new \ReflectionFunction($map))->getNumberOfRequiredParameters()) ?
+            $map($this->value) : $map($this->value, $this);
+        return static::new($mapped);
     }
 
     /**
      * @param callable $map
-     * @return Option
+     * @return SingleContainer
      */
-    public function flatMap(callable $map): Option
+    public function flatMap(callable $map): SingleContainer
     {
         return $map($this->value, $this);
     }
@@ -136,9 +149,8 @@ trait BaseSome
      * @param Option $option
      * @return bool
      */
-    public function equals(Option $option): bool
+    public function equals($option): bool
     {
-        $self = self::getCalledNamespace() . '\\Some';
-        return $option instanceof $self && $this->value === $option->get();
+        return $option instanceof static && $this->value === $option->get();
     }
 }

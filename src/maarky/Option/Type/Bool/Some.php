@@ -1,12 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace maarky\Option\Type\Bool;
+
 use maarky\Option\Component\BaseSome;
 
-/**
- * @method bool get()
- */
 class Some extends Option
 {
     use BaseSome;
+
+    public function get(): bool
+    {
+        return $this->value;
+    }
 }
