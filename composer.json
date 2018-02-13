@@ -22,5 +22,6 @@
   },
   "autoload-dev": {
     "psr-4": { "maarky\\Test\\": "test/maarky/" }
-  }
+  },
+  "bin": ["bin/create-option"]
 }
