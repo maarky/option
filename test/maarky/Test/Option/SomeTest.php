@@ -42,7 +42,7 @@ class SomeTest extends TestCase
     public function testFlatMap()
     {
         $value = 2;
-        $double = function(int $num, Some $some) { return Option::new($num * 2); };
+        $double = function(int $num) { return Option::new($num * 2); };
         $some = Option::new($value);
         $expected = $double($value, $some);
         $this->assertEquals($expected, $some->flatMap($double));

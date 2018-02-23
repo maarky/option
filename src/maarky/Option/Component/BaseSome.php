@@ -86,7 +86,7 @@ trait BaseSome
      */
     public function filter(callable $filter): SingleContainer
     {
-        if(true === $filter($this->value, $this)) {
+        if(true === $filter($this->value)) {
             return $this;
         }
 
@@ -99,7 +99,7 @@ trait BaseSome
      */
     public function filterNot(callable $filter): SingleContainer
     {
-        if(false === $filter($this->value, $this)) {
+        if(false === $filter($this->value)) {
             return $this;
         }
         return static::new(null, function() { return false; });
@@ -111,7 +111,7 @@ trait BaseSome
      */
     public function foreach (callable $each): SingleContainer
     {
-        $each($this->value, $this);
+        $each($this->value);
         return $this;
     }
 
@@ -131,9 +131,7 @@ trait BaseSome
      */
     public function map(callable $map): SingleContainer
     {
-        $mapped = (1 == (new \ReflectionFunction($map))->getNumberOfRequiredParameters()) ?
-            $map($this->value) : $map($this->value, $this);
-        return static::new($mapped);
+        return static::new($map($this->value));
     }
 
     /**
@@ -142,7 +140,7 @@ trait BaseSome
      */
     public function flatMap(callable $map): SingleContainer
     {
-        return $map($this->value, $this);
+        return $map($this->value);
     }
 
     /**
