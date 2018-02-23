@@ -18,9 +18,9 @@ if(!class_exists($class)) {
 }
 
 $reflection = new ReflectionClass($class);
-$classDir = dirname($reflection->getFileName());
 
 if($reflection->inNamespace()) {
+    $classDir = dirname($reflection->getFileName());
     $namespace = explode('\\', $reflection->getName());
     $className = $namespace[count($namespace) - 1];
     $optionDir = $classDir . DIRECTORY_SEPARATOR . $className;
