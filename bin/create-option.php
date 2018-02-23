@@ -3,18 +3,21 @@ declare(strict_types=1);
 
 require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-if(!class_exists($argv[1])) {
-    $file = array_pop(explode('\\', $argv[1]));
+$class = $argv[1];
+
+if(!class_exists($class)) {
+    $file = array_pop(explode('\\', $class));
     $path = getcwd() . DIRECTORY_SEPARATOR . $file . '.php';
     if(file_exists($path)) {
         require $path;
     }
-    if(!class_exists($argv[1])) {
-        echo " Class {$argv[1]} does not exist or cannot be found.\n";
+    if(!class_exists($class)) {
+        echo " Class {$class} does not exist or cannot be found.\n";
+        exit(1);
     }
 }
 
-$reflection = new ReflectionClass($argv[1]);
+$reflection = new ReflectionClass($class);
 $classDir = dirname($reflection->getFileName());
 
 if($reflection->inNamespace()) {
@@ -32,7 +35,7 @@ if($reflection->inNamespace()) {
     }
     $namespace = $reflection->getName();
 } else {
-    $optionDir = getcwd() . DIRECTORY_SEPARATOR . $argv[1];
+    $optionDir = getcwd() . DIRECTORY_SEPARATOR . $class;
     if(!file_exists($optionDir)) {
         mkdir($optionDir);
     }
@@ -40,7 +43,7 @@ if($reflection->inNamespace()) {
     if(!file_exists($optionDir)) {
         mkdir($optionDir);
     }
-    $namespace = $argv[1];
+    $namespace = $class;
 }
 
 $optionTemplate = <<<gfrfgrfg
@@ -107,7 +110,7 @@ class None extends Option
 gfrfgrfg;
 
 $find = ['%%NAMESPACE%%', '%%CLASS%%'];
-$replace = [$namespace, '\\' . ltrim($argv[1], '\\')];
+$replace = [$namespace, '\\' . ltrim($class, '\\')];
 
 $optionContent = str_replace($find, $replace, $optionTemplate);
 $someContent = str_replace($find, $replace, $someTemplate);
