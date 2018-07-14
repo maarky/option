@@ -19,6 +19,11 @@ abstract class Option implements SingleContainer
      */
     final public static function new($value, callable $filter = null): Option
     {
+        return static::create($value, $filter);
+    }
+
+    final public static function create($value, callable $filter = null): Option
+    {
         $filter = $filter ?: function() { return true; };
         if(static::validate($value) && $filter($value)) {
             $class = static::getCalledNamespaceOptionClass('Some');
