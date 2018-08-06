@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace maarky\Test\Option\Type;
 
 use PHPUnit\Framework\TestCase;
-use maarky\Option\Type\DateTimeImmutable\Option;
+use maarky\Option\Type\PHP\Classes\DateTimeImmutable\Option;
 
 class DateTimeImmutableTest extends TestCase
 {

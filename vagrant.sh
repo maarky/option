@@ -20,6 +20,6 @@ xdebug.remote_connect_back=1
 error_reporting=E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED
 EOF
 
-ln -s /vagrant /home/vagrant
-sudo chgrp vagrant ubuntu
-sudo chmod 775 ubuntu
+cd /home
+chgrp vagrant ubuntu
+chmod 775 ubuntu

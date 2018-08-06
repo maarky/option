@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace maarky\Test\Option\Type;
 
 use PHPUnit\Framework\TestCase;
-use maarky\Option\Type\DateTime\Option;
+use maarky\Option\Type\PHP\Classes\DateTime\Option;
 
 class DateTimeTest extends TestCase
 {
