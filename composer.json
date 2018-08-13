@@ -10,6 +10,10 @@
       "email": "sparkymeister@gmail.com"
     }
   ],
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
   "require": {
     "php": ">=7.0",
     "maarky/singlecontainer": "1.0.0"
@@ -18,7 +22,8 @@
     "phpunit/phpunit": "6.*"
   },
   "autoload": {
-    "psr-4": { "maarky\\": "src/maarky/" }
+    "psr-4": { "maarky\\": "src/maarky/" },
+    "classmap": [ "src/" ]
   },
   "autoload-dev": {
     "psr-4": { "maarky\\Test\\": "test/maarky/" }
