@@ -44,30 +44,30 @@ Basics
 
 This implementation of Options consist of three parts:
 
-1.  An abstract Option class (marrky\Option\Option)
-1.  A None class extending Option (marrky\Option\None) and mixing in the base None trait (maarky\Option\Component\BaseNone)
+1.  An abstract Option class (maarky\Option\Option)
+1.  A None class extending Option (maarky\Option\None) and mixing in the base None trait (maarky\Option\Component\BaseNone)
 1.  A Some class extending Option (maarky\Option\Some) and mixing in the base Some trait (maarky\Option\Component\BaseSome)
 
 These classes are extended by 10 additional Option types, one for each PHP data type:
 
-* Arr for arrays (marrky\Option\Type\Arr\Option)
-* Bool for booleans (marrky\Option\Type\Bool\Option)
-* Callback for callbacks (marrky\Option\Type\Callback\Option)
-* Float for floats (marrky\Option\Type\Float\Option)
-* Int for integers (marrky\Option\Type\Int\Option)
-* Null for null values (marrky\Option\Type\Null\Option)
-* Object for any type of objects (marrky\Option\Type\Object\Option)
-* Resource for resources (marrky\Option\Type\Resource\Option)
-* String for strings (marrky\Option\Type\String\Option)
+* Arr for arrays (maarky\Option\Type\Arr\Option)
+* Bool for booleans (maarky\Option\Type\Bool\Option)
+* Callback for callbacks (maarky\Option\Type\Callback\Option)
+* Float for floats (maarky\Option\Type\Float\Option)
+* Int for integers (maarky\Option\Type\Int\Option)
+* Null for null values (maarky\Option\Type\Null\Option)
+* Object for any type of objects (maarky\Option\Type\Object\Option)
+* Resource for resources (maarky\Option\Type\Resource\Option)
+* String for strings (maarky\Option\Type\String\Option)
 
 Each of these extend the base Option class and are extended by their own Some and None classes.
 
 The Option class should be used for type declarations while the Some and None classes provide the actual objects you will
 be working with. Consider the following example:
 
-    use marrky\Option;
-    use marrky\Option\None;
-    use marrky\Option\Some;
+    use maarky\Option;
+    use maarky\Option\None;
+    use maarky\Option\Some;
      
     ...
      
@@ -89,26 +89,26 @@ these things without even knowing if you have a Some or a None.
 Creating Options
 ----------------
 
-You create an Option by using the static new() method on the abstract Option class. The Option class has an abstract 
+You create an Option by using the static create() method on the abstract Option class. The Option class has an abstract 
 validate() method that determines whether or not a given value can be stored in a Some. If you try to create an Option 
 with an invalid value you get a None back.
 
-    use marrky\Option\Option;
-    use marrky\Option\Type\Int\Option as IntOption;
-    use marrky\Option\Type\Null\Option as NullOption;
+    use maarky\Option\Option;
+    use maarky\Option\Type\Int\Option as IntOption;
+    use maarky\Option\Type\Null\Option as NullOption;
      
-    Option::new(1);// returns Some
-    Option::new('1');// returns Some
-    Option::new(null);// returns None
+    Option::create(1);// returns Some
+    Option::create('1');// returns Some
+    Option::create(null);// returns None
      
-    IntOption::new(1);// returns Some
-    IntOption::new('1');// returns None
-    IntOption::new(1.0);// returns None
-    IntOption::new(null);// returns None
-    IntOption::new('');// returns None
+    IntOption::create(1);// returns Some
+    IntOption::create('1');// returns None
+    IntOption::create(1.0);// returns None
+    IntOption::create(null);// returns None
+    IntOption::create('');// returns None
      
-    NullOption::new(null);// returns Some
-    NullOption::new('');// returns None
+    NullOption::create(null);// returns Some
+    NullOption::create('');// returns None
     
 
 Methods For Determining Option Type
@@ -134,26 +134,26 @@ Methods For Retrieving Option Values
 Some will always return the stored value.  
 None will always throw a type error.
 
-    Option::new(5)->get(); //returns 5
-    Option::new(null)->get(); //throws type error
+    Option::create(5)->get(); //returns 5
+    Option::create(null)->get(); //throws type error
 
 ### getOrElse($else)
 
 Some will always return the stored value.  
 None will return $else or throw a type error is $else is not a valid value.
 
-    Option::new(5)->getOrElse(7); //returns 5
-    Option::new(null)->getOrElse(7); //returns 7
-    IntOption::new(null)->getOrElse('7'); //throws type error
+    Option::create(5)->getOrElse(7); //returns 5
+    Option::create(null)->getOrElse(7); //returns 7
+    IntOption::create(null)->getOrElse('7'); //throws type error
 
 ### getOrCall(callable $call)
 
 Some will always return the stored value.  
 None will always call $call and return it or throw a type error is $call returns an invalid value.
 
-    Option::new(5)->getOrCall(function() { return 7; }); //returns 5
-    Option::new(null)->getOrCall(function() { return 7; }); //returns 7
-    IntOption::new(null)->getOrCall(function() { return '7'; }); //throws type error
+    Option::create(5)->getOrCall(function() { return 7; }); //returns 5
+    Option::create(null)->getOrCall(function() { return 7; }); //returns 7
+    IntOption::create(null)->getOrCall(function() { return '7'; }); //throws type error
 
 Replacing An Option
 -------------------
@@ -163,25 +163,25 @@ Replacing An Option
 Some will always return itself.  
 None will always return $else if $else is a Single Container, otherwise throws a type error.
 
-    Option::new(5)->orElse(Option::new(7)); //returns Some(5)
-    Option::new(null)->orElse(Option::new(7)); //returns Some(7)
-    Option::new(null)->orElse(7); //throws type error
+    Option::create(5)->orElse(Option::create(7)); //returns Some(5)
+    Option::create(null)->orElse(Option::create(7)); //returns Some(7)
+    Option::create(null)->orElse(7); //throws type error
 
 ### orCall(callable $else)
 
 Some will always return itself.  
 None will always call $else and return its return value if it is a Single Container, otherwise throws a type error. 
 
-    Option::new(5)->orCall(function() { return Option::new(7); }); //returns Some(5)
-    Option::new(5)->orCall(function() { return 7; }); //returns Some(5) because the function is ignored by Some
+    Option::create(5)->orCall(function() { return Option::create(7); }); //returns Some(5)
+    Option::create(5)->orCall(function() { return 7; }); //returns Some(5) because the function is ignored by Some
                                                       //on a None this would throw type error
      
-    Option::new(null)->orCall(function() { return Option::new(7); }); //returns Some(7)
-    Option::new(null)->orCall(function() { return 7; }); //throws type error
+    Option::create(null)->orCall(function() { return Option::create(7); }); //returns Some(7)
+    Option::create(null)->orCall(function() { return 7; }); //throws type error
      
-    IntOption::new(null)->orCall(function() { return IntOption::new(7); }); // returns Some(7)
-    IntOption::new(null)->orCall(function() { return 7; }); //throws type error
-    IntOption::new(null)->orCall(function() { return StringOption::new(null); }); // returns String\None
+    IntOption::create(null)->orCall(function() { return IntOption::create(7); }); // returns Some(7)
+    IntOption::create(null)->orCall(function() { return 7; }); //throws type error
+    IntOption::create(null)->orCall(function() { return StringOption::create(null); }); // returns String\None
 
 Filtering An Option
 -------------------
@@ -194,11 +194,11 @@ Some will return itself if the callback returns TRUE, otherwise it returns a Non
 as itself. In other words a String Some will return a String None if the callback returns FALSE.  
 None always returns itself.
 
-    Option::new(5)->filter(function(int $value) { return $value > 1; }); //returns Some(5)
-    Option::new(5)->filter(function(int $value) { return $value > 5; }); //returns None
+    Option::create(5)->filter(function(int $value) { return $value > 1; }); //returns Some(5)
+    Option::create(5)->filter(function(int $value) { return $value > 5; }); //returns None
      
-    Option::new(null)->filter(function(int $value) { return $value > 1; }); //returns None
-    Option::new(null)->filter(function(int $value) { return $value > 5; }); //returns None
+    Option::create(null)->filter(function(int $value) { return $value > 1; }); //returns None
+    Option::create(null)->filter(function(int $value) { return $value > 5; }); //returns None
     
 ### filterNot(callable $filter)
 
@@ -210,11 +210,11 @@ Some will return itself if the callback returns FALSE, otherwise it returns a No
 as itself. In other words a String Some will return a String None if the callback returns TRUE.  
 None always returns itself.
 
-    Option::new(5)->filter(function(int $value) { return $value <= 5; }); //returns None
-    Option::new(5)->filter(function(int $value) { return $value > 5; }); //returns Some(5)
+    Option::create(5)->filter(function(int $value) { return $value <= 5; }); //returns None
+    Option::create(5)->filter(function(int $value) { return $value > 5; }); //returns Some(5)
      
-    Option::new(null)->filter(function(int $value) { return $value > 1; }); //returns None
-    Option::new(null)->filter(function(int $value) { return $value > 5; }); //returns None
+    Option::create(null)->filter(function(int $value) { return $value > 1; }); //returns None
+    Option::create(null)->filter(function(int $value) { return $value > 5; }); //returns None
 
 Mapping an Option
 -----------------
@@ -228,35 +228,35 @@ if possible, otherwise a base Some.
 Some will return an Option containing the return value of the callback.  
 None will always return itself.
 
-    Option::new(5)->map(function(int $value) { return $value * 2; }); //returns Some(10)
-    Option::new(5)->map(function(int $value) { return (string) $value; }); //returns Some('5')
-    Option::new(5)->map(function(int $value) { return Option::new($value); }); //returns Some(Some(5))
-    Option::new(5)->map(function(int $value) { return Option::new(null); }); //returns Some(None)
+    Option::create(5)->map(function(int $value) { return $value * 2; }); //returns Some(10)
+    Option::create(5)->map(function(int $value) { return (string) $value; }); //returns Some('5')
+    Option::create(5)->map(function(int $value) { return Option::create($value); }); //returns Some(Some(5))
+    Option::create(5)->map(function(int $value) { return Option::create(null); }); //returns Some(None)
      
-    IntOption::new(5)->map(function(int $value) { return $value * 2; }); //returns Int\Some(10)
-    IntOption::new(5)->map(function(int $value) { return (string) $value; }); //returns Option\Some('5')
+    IntOption::create(5)->map(function(int $value) { return $value * 2; }); //returns Int\Some(10)
+    IntOption::create(5)->map(function(int $value) { return (string) $value; }); //returns Option\Some('5')
      
-    Option::new(null)->map(function(int $value) { return $value * 2; }); //returns None
-    Option::new(null)->map(function(int $value) { return (string) $value; }); //returns None
-    Option::new(null)->map(function(int $value) { return new Some($value); }); //returns None
-    Option::new(null)->map(function(int $value) { return new None; }); //returns None
+    Option::create(null)->map(function(int $value) { return $value * 2; }); //returns None
+    Option::create(null)->map(function(int $value) { return (string) $value; }); //returns None
+    Option::create(null)->map(function(int $value) { return new Some($value); }); //returns None
+    Option::create(null)->map(function(int $value) { return new None; }); //returns None
 
 ### flatMap(callback $map)
 
 This works in much the same way as map() except the callback must return a Single Container. A type error
 is thrown if it doesn't.
 
-    Option::new(5)->flatMap(function(int $value) { return $value * 2; }); ////throws an UnexpectedValueException exception
-    Option::new(5)->flatMap(function(int $value) { return new Some((string) $value); }); //returns Some('5')
-    Option::new(5)->flatMap(function(int $value) { return new None; }); //returns None
+    Option::create(5)->flatMap(function(int $value) { return $value * 2; }); ////throws an UnexpectedValueException exception
+    Option::create(5)->flatMap(function(int $value) { return new Some((string) $value); }); //returns Some('5')
+    Option::create(5)->flatMap(function(int $value) { return new None; }); //returns None
      
-    IntOption::new(5)->flatMap(function(int $value) { return $value * 2; }); ////throws type error
-    IntOption::new(5)->flatMap(function(int $value) { return Option::new((string) $value); }); //returns Option\Some('5')
+    IntOption::create(5)->flatMap(function(int $value) { return $value * 2; }); ////throws type error
+    IntOption::create(5)->flatMap(function(int $value) { return Option::create((string) $value); }); //returns Option\Some('5')
      
-    Option::new(null)->flatMap(function(int $value) { return $value * 2; }); //returns None
-    Option::new(null)->flatMap(function(int $value) { return (string) $value; }); //returns None
-    Option::new(null)->flatMap(function(int $value) { return new Some($value); }); //returns None
-    Option::new(null)->flatMap(function(int $value) { return new None; }); //returns None
+    Option::create(null)->flatMap(function(int $value) { return $value * 2; }); //returns None
+    Option::create(null)->flatMap(function(int $value) { return (string) $value; }); //returns None
+    Option::create(null)->flatMap(function(int $value) { return new Some($value); }); //returns None
+    Option::create(null)->flatMap(function(int $value) { return new None; }); //returns None
 
 Performing An Operation Using An Options Value
 ----------------------------------------------
@@ -268,9 +268,9 @@ This method simply calls the $each function passing in the Options value. It ret
 Some calls the $each function passing in the Options value.  
 None ignores the callback and does nothing.
 
-    Option::new('Hello')->foreach(function(string $value) { echo $value; }); //echoes 'Hello'.
-    Option::new('/path/to/file')->foreach(function(string $value) { unlink($value); }); //deletes a file.
-    Option::new(null)->foreach(function(string $value) { echo $value; }); //does nothing.
+    Option::create('Hello')->foreach(function(string $value) { echo $value; }); //echoes 'Hello'.
+    Option::create('/path/to/file')->foreach(function(string $value) { unlink($value); }); //deletes a file.
+    Option::create(null)->foreach(function(string $value) { echo $value; }); //does nothing.
 
 Performing An Operation Using No Value
 --------------------------------------
@@ -283,8 +283,8 @@ the Option. It returns $this.
 Some ignores the callback and does nothing  
 None calls the $nothing function passing in the Option.
 
-    Option::new('Hello')->fornothing(function(string $value) { echo $value; }); //does nothing
-    Option::new(null)->foreach(function(Option $option) { echo get_class($option); }); //echoes "marrky\Option\None".
+    Option::create('Hello')->fornothing(function(string $value) { echo $value; }); //does nothing
+    Option::create(null)->foreach(function(Option $option) { echo get_class($option); }); //echoes "maarky\Option\None".
 
 Testing Equality Between Two Options
 ------------------------------------
@@ -296,16 +296,16 @@ The equals method checks if the two Options are the same type and if their value
 Some returns TRUE if the provided Option is the same type and contains the same value, otherwise FALSE;  
 None returns TRUE if the provided Option is the same type of None, otherwise FALSE.
 
-    Option::new(1)->equals(Option::new(1)); //returns TRUE
-    Option::new(1)->equals(Option::new('1')); //returns FALSE
-    Option::new(1)->equals(Option::new(2)); //returns FALSE
-    Option::new(1)->equals(Option::new(null)); //returns FALSE
+    Option::create(1)->equals(Option::create(1)); //returns TRUE
+    Option::create(1)->equals(Option::create('1')); //returns FALSE
+    Option::create(1)->equals(Option::create(2)); //returns FALSE
+    Option::create(1)->equals(Option::create(null)); //returns FALSE
      
-    IntOption::new(1)->equals(Option::new(1)); // returns false
+    IntOption::create(1)->equals(Option::create(1)); // returns false
      
-    Option::new(null)->equals(Option::new(null)); // returns TRUE
-    Option::new(null)->equals(IntOption::new(null)); // returns FALSE
-    Option::new(null)->equals(Option::new(1)); // returns FALSE
+    Option::create(null)->equals(Option::create(null)); // returns TRUE
+    Option::create(null)->equals(IntOption::create(null)); // returns FALSE
+    Option::create(null)->equals(Option::create(1)); // returns FALSE
 
 Creating Custom Options
 =======================
@@ -328,7 +328,7 @@ User/Option/Option.php
      
     use User;
      
-    class Option extends \marrky\Option\Type\Object\Option
+    class Option extends \maarky\Option\Type\Object\Option
     {
         public static function validate($value): bool
         {
@@ -368,7 +368,7 @@ You would use this Option in your repository class in the same way as we did in 
         $result = $this->db->execute("some SQL");
         $entity = $result->rowCount() ? new User($result->fetch()) : null;
         
-        return Option::new($entity);
+        return Option::create($entity);
     }
 
 Array Option Example
@@ -380,7 +380,7 @@ Point/Option/Option.php
     
     namespace Point\Option;
      
-    class Option extends \marrky\Option\Type\Arr\Option
+    class Option extends \maarky\Option\Type\Arr\Option
     {
         public static function validate($value): bool
         {
@@ -409,39 +409,39 @@ Point/Option/None.php
 
 And this is how you would use it:
 
-    $point = new Point\Option::new(['lat' => 123.456, 'lon' => 12.34]); //returns Point\Option\Some
+    $point = new Point\Option::create(['lat' => 123.456, 'lon' => 12.34]); //returns Point\Option\Some
     $point->filter(function(array $point) { return $point['lat'] > 123}); // returns the Point\Option\Some
     $point->filter(function(array $point) { return $point['lat'] < 123}); // returns Point\Option\None
-    Point\Option::new(['lat' => 123.456, 'lon' => 12.34, 'elevation' => 12345]); //returns Point\Option\None
+    Point\Option::create(['lat' => 123.456, 'lon' => 12.34, 'elevation' => 12345]); //returns Point\Option\None
 
 Creating Custom Options With Command Line Tool
 ----------------------------------------------
 
-A simple way to create a custom Option class that accommodates a specific class as its value is to use the command 
-line. The Option library comes with a create-option command installed inside the bin directory. Composer will copy 
-it to the composer vendor/bin directory. The way you use it is to simply provide the name of a class you want to
-create a custom Option for.
+You can also create Option classes for any namespace using the command line.
 
-If the class can be found using the Composer autoloader it will create a directory in the same directory as the class 
-with the same name as the class, then a subdirectory named Option which will contain three class files for Option, 
-Some, and None. For example:
+    -c Only process classes, not interfaces
+    --in Namespace you want to create Options for (Required)
+    --out Namespace root for generated Options (Required)
+    --src The source root (defaults to cwd)
+    --srcn The namespace for the source root. Only needed if the root namespace does not have a directory in --src
+           For example, if --in="org_name\project_name\Foo" and --srcn="org_name\project_name" it expects Foo to be a directory in --src
+           If --srcn is not specified it expects to fine the directory org_name in --src.
 
-    ubuntu@ubuntu-xenial:/vagrant/sandbox$ ../bin/create-option "maarky\Option\Type\Arr\Some"
-    Created /vagrant/src/maarky/Option/Type/Arr/Some/Option/Option.php
-    Created /vagrant/src/maarky/Option/Type/Arr/Some/Option/Some.php
-    Created /vagrant/src/maarky/Option/Type/Arr/Some/Option/None.php
+For example:
 
-If it was unable to load the class with the Composer autoloader it will look for a file in the current working
-directory with the same name as the class. In the above example it would look in the current directory for a 
-file named Some.php.
+     .vendor/bin/create-option --in="org_name\project_name\Foo" --out="org_name\project_name\Option" --src="src"
+ 
+This will create an Option for every class and interface in the org_name\project_name\Foo namespace. They will all 
+be saved to org_name\project_name\Option\Foo.
 
-If the class is not in a namespace, for example if you give it a built in PHP class, it will create it inside the 
-current working directory. For example:
+    .vendor/bin/create-option --in="org_name\project_name\Foo" --out="org_name\project_name\Option" --src="src" -c
 
-    ubuntu@ubuntu-xenial:/vagrant/sandbox$ ../bin/create-option DateTime
-    Created /vagrant/sandbox/DateTime/Option/Option.php
-    Created /vagrant/sandbox/DateTime/Option/Some.php
-    Created /vagrant/sandbox/DateTime/Option/None.php
+This will do the exact same thing, but it will ignore interfaces.
+
+    .vendor/bin/create-option --in="org_name\project_name\Foo" --out="org_name\project_name\Option" --src="src" -srcn="org_name\project_name"
+    
+The above will do the same thing as the first, but it assumes that there is no directory for src/org_name/project_name/Foo
+but instead it expects to find src/Foo and that src/Foo/Test.php will be in the org_name\project_name\Foo namespace.
 
 Overriding Equals
 -----------------
@@ -482,7 +482,7 @@ to use the other with a filter.
         {
             $result = $this->db->execute('SELECT * FROM users WHERE email = ?', [$email], [\PDO::PARAM_STR]);
             $user = $result->rowCount() ? new User($result->fetchRow()) : null;
-            return Option::new($user);
+            return Option::create($user);
         }
          
         pubic function findByLogin(string $email, string $password): Option
@@ -513,7 +513,7 @@ What if you have a number and you want to do math on it and get back the result?
 What if you want to get the value as a float Some?
 
     $intOption->flatMap(function(int $number) { 
-        return Float\Option::new($number * 2.5);
+        return Float\Option::create($number * 2.5);
     });
 
 
@@ -525,7 +525,7 @@ method might return an array Option with an array of order objects.
 
     $orders = $customer->getOrders()
                 ->map(function(array $orders) { return count($orders); })
-                ->orElse(Int\Option::new(0));
+                ->orElse(Int\Option::create(0));
 
 If getOrders() returns a Some it will be replaced by an integer Some containing the number of orders. Since orElse() is
 called on a Some the else will be ignored and $orders will contain the mapped integer Some. But if getOrders() returns a
@@ -545,7 +545,7 @@ entity.
     
     ...
     
-    $entity = $userRepository->find(5)->orElse(Option::new(new Entity()));
+    $entity = $userRepository->find(5)->orElse(Option::create(new Entity()));
 
 In this example the find() method first queries the identity map which returns an Option. If that Option is a None it
 will search the cache and if that returns a None it will search the database. What you get back is the first Some that
@@ -593,10 +593,10 @@ What if you have a User class that expects a name, email address and optionally 
     }
      
     //we do have a phone number
-    $user = new User('John Dough', 'john@example.com', String\Option::new('123-456-7890'));
+    $user = new User('John Dough', 'john@example.com', String\Option::create('123-456-7890'));
      
     //we do not have a phone number
-    $user = new User('John Dough', 'john@example.com', String\Option::new(null);
+    $user = new User('John Dough', 'john@example.com', String\Option::create(null);
 
 Now that you have your user object how do you know if that user has a phone number? Without options you would need to
 either add a hasPhoneNumber() method to your User object or you would have to get the phone number and then check if it
