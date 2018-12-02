@@ -26,7 +26,7 @@ Requirements
 ============
 
 This library requires PHP 7. Since many people may not yet be working with PHP 7 this library includes a Vagrantfile with
-provisioning that installs php7.0-cli and Xdebug. It will also install Composer and PHPUnit. You can use this to run the 
+provisioning that installs php7.2-cli and Xdebug. It will also install Composer and PHPUnit. You can use this to run the 
 unit tests and as a sandbox.
 
 Installation
