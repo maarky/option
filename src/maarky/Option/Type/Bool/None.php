@@ -8,19 +8,4 @@ use maarky\Option\Component\BaseNone;
 class None extends Option
 {
     use BaseNone;
-
-    public function get(): bool
-    {
-        return $this;
-    }
-
-    public function getOrElse($else): bool
-    {
-        return $else;
-    }
-
-    public function getOrCall(callable $call): bool
-    {
-        return $call();
-    }
 }

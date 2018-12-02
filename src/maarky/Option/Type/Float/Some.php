@@ -8,9 +8,4 @@ use maarky\Option\Component\BaseSome;
 class Some extends Option
 {
     use BaseSome;
-
-    public function get(): float
-    {
-        return $this->value;
-    }
 }

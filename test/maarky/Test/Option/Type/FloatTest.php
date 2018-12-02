@@ -38,21 +38,9 @@ class FloatTest extends TestCase
         $this->assertSame($val, Option::new(1)->getOrElse($val));
     }
 
-    public function testNone_getOrElse_badElse()
-    {
-        $this->expectException(\TypeError::class);
-        Option::new(1)->getOrElse(1);
-    }
-
     public function testNone_getOrCall()
     {
         $val = 0.1;
         $this->assertSame($val, Option::new(1)->getOrCall(function() use ($val) {return $val;}));
-    }
-
-    public function testNone_getOrCall_badCall()
-    {
-        $this->expectException(\TypeError::class);
-        Option::new(1)->getOrCall(function(){return 1;});
     }
 }

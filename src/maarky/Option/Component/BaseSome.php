@@ -56,10 +56,10 @@ trait BaseSome
     }
 
     /**
-     * @param callable $else
+     * @param callable $call
      * @return SingleContainer
      */
-    public function orCall(callable $else): SingleContainer
+    public function orCall(callable $call): SingleContainer
     {
         return $this;
     }
@@ -90,7 +90,7 @@ trait BaseSome
             return $this;
         }
 
-        return static::new(null, function() { return false; });
+        return static::create(null, function() { return false; });
     }
 
     /**
@@ -102,7 +102,7 @@ trait BaseSome
         if(false === $filter($this->value)) {
             return $this;
         }
-        return static::new(null, function() { return false; });
+        return static::create(null, function() { return false; });
     }
 
     /**
@@ -131,7 +131,7 @@ trait BaseSome
      */
     public function map(callable $map): SingleContainer
     {
-        return static::new($map($this->value));
+        return static::create($map($this->value));
     }
 
     /**

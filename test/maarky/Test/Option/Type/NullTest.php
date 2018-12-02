@@ -38,21 +38,9 @@ class NullTest extends TestCase
         $this->assertSame($val, Option::new(0.0)->getOrElse($val));
     }
 
-    public function testNone_getOrElse_badElse()
-    {
-        $this->expectException(\TypeError::class);
-        Option::new(1.0)->getOrElse(1.0);
-    }
-
     public function testNone_getOrCall()
     {
         $val = null;
         $this->assertSame($val, Option::new(1.0)->getOrCall(function() use ($val) {return $val;}));
-    }
-
-    public function testNone_getOrCall_badCall()
-    {
-        $this->expectException(\TypeError::class);
-        Option::new(1.0)->getOrCall(function(){return 1.0;});
     }
 }

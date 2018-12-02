@@ -15,7 +15,7 @@ trait BaseNone
      */
     public function get()
     {
-        throw new \TypeError();
+        throw new \TypeError('Cannot get anything from a None.');
     }
 
     /**
@@ -25,9 +25,6 @@ trait BaseNone
      */
     public function getOrElse($else)
     {
-        if(!static::validate($else)) {
-            throw new \TypeError();
-        }
         return $else;
     }
 
@@ -39,19 +36,16 @@ trait BaseNone
     public function getOrCall(callable $call)
     {
         $else = $call($this);
-        if(!static::validate($else)) {
-            throw new \TypeError();
-        }
         return $else;
     }
 
     /**
-     * @param callable $else
+     * @param callable $call
      * @return SingleContainer
      */
-    public function orCall(callable $else): SingleContainer
+    public function orCall(callable $call): SingleContainer
     {
-        return $else($this);
+        return $call($this);
     }
 
     /**

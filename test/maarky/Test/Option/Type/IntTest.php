@@ -40,8 +40,9 @@ class IntTest extends TestCase
 
     public function testNone_getOrElse_badElse()
     {
-        $this->expectException(\TypeError::class);
-        Option::new(1.0)->getOrElse(1.0);
+        $value = 1.0;
+        $actual = Option::new($value)->getOrElse($value);
+        $this->assertEquals($value, $actual);
     }
 
     public function testNone_getOrCall()
@@ -52,7 +53,8 @@ class IntTest extends TestCase
 
     public function testNone_getOrCall_badCall()
     {
-        $this->expectException(\TypeError::class);
-        Option::new(1.0)->getOrCall(function(){return 1.0;});
+        $value = 1.0;
+        $actual = Option::new($value)->getOrCall(function()use($value){return $value;});
+        $this->assertEquals($value, $actual);
     }
 }
